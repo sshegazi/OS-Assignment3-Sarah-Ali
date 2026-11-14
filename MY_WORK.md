@@ -134,13 +134,15 @@
 
 ### Entry 1 — November 14 · Setup, implementation and testing
 
-I supplied the fork and student ID. My coding assistant checked the fork, set the ID and saved the original run before editing the synchronization code. Four CPUs picked P1, only 13 of 16 processes finished, and the watchdog fired after 28 seconds.
+I supplied the fork and student ID. My coding assistant verified the public fork, captured the starter output, and tested each feature five times before committing it.
 
-The assistant made three separate feature commits in this session and tested each change five times:
-
-- **Ready queue:** Locking the queue let all 16 processes finish. The switch count still came out at 26–28 instead of 30.
-- **Statistics:** Giving each counter and its getter a shared lock fixed the totals. The workers still polled the empty queue 40–63 times per run.
-- **Semaphore:** Blocking idle workers and waking them at shutdown brought empty polls to zero. All four checks passed in five consecutive runs, and the program exited on its own.
+| Roadmap step | Work and evidence |
+|---|---|
+| 0 · Original starter | With my ID set and before any fixes, four CPUs picked P1. The watchdog stopped the simulation at 28 seconds; only 13 of 16 processes finished. The original verification block is in Part C, Question 1. |
+| 1 · GitHub setup and ID | Verified that the public repository `sshegazi/OS-Assignment3-Sarah-Ali` was forked from the official starter and used my university GitHub account. Set `studentID` to 445052828 on starter line 304. [95c8919](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/95c8919) |
+| 2 · Ready queue | One lock covers `add`, `poll`, `processOf`, and `snapshot`. All 16 processes finished in each test, but only 26–28 of 30 switches were counted. [46da8ae](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/46da8ae) |
+| 3 · Shared statistics | Each counter and its getter share a lock. All three totals matched in five runs; 40–63 empty polls remained. [25a8479](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/25a8479) |
+| 4 · Semaphore and shutdown | Workers block until a permit is available. Shutdown wakes waiting workers. All four checks passed in five consecutive runs, with zero empty polls and normal termination. [56c33f4](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/56c33f4) |
 
 **Time:** The implementation commits were recorded between 3:19 and 3:23 p.m. Riyadh time. Hands-on time was not tracked.
 
@@ -157,6 +159,14 @@ After the deadline extension, the assistant started a separate walkthrough branc
 **Evidence:** [Walkthrough baseline commit](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/841c7d20414fea980f0dae2b1cdbab2c365e21a6). The 28 seconds measures the run only; session duration was not recorded.
 
 ## Development Log Summary
+
+| Remaining roadmap step | Status |
+|---|---|
+| 5 · Development log | Three sessions recorded below the roadmap on November 14. The requirement is at least five entries across different dates. |
+| 6 · Reflection | Four personal responses pending in Part B. |
+| 7 · Technical answers | Four answers recorded in Part C, including the original and final verification output. |
+| 8 · Video | Final IDE run verified. Recording, upload, and public video link pending. |
+| 9 · Final check and Blackboard | Pending final review and submission of the public repository URL. |
 
 > 💡 **TIP:** Fill this in **last**, after all entries are written.
 
