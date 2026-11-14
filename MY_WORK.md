@@ -132,62 +132,29 @@
 
 ## Your Development Log
 
-Times below are Riyadh milestone times. Hands-on durations were not tracked.
+### Entry 1 — November 14 · Setup, implementation and testing
 
-### Entry 1 — November 14, 2026 · 15:19–15:21 Riyadh · Repository setup and starter run
+I supplied the fork and student ID. My coding assistant checked the fork, set the ID and saved the original run before editing the synchronization code. Four CPUs picked P1, only 13 of 16 processes finished, and the watchdog fired after 28 seconds.
 
-I supplied my student ID and the link to my fork. My coding assistant verified that the repository was public and forked from the instructor’s starter, then committed the ID change and ran the original program with my seed.
+The assistant made three separate feature commits in this session and tested each change five times:
 
-**Problem observed:** All four CPUs picked P1. The watchdog stopped the run after 28 seconds. Only 13 of 16 processes finished, and the workers recorded 648 empty polls.
+- **Ready queue:** Locking the queue let all 16 processes finish. The switch count still came out at 26–28 instead of 30.
+- **Statistics:** Giving each counter and its getter a shared lock fixed the totals. The workers still polled the empty queue 40–63 times per run.
+- **Semaphore:** Blocking idle workers and waking them at shutdown brought empty polls to zero. All four checks passed in five consecutive runs, and the program exited on its own.
 
-**Next step:** The saved output pointed to `ReadyQueue.poll()`: reading the first thread and removing it needed to happen under the same lock.
+**Time:** The implementation commits were recorded between 3:19 and 3:23 p.m. Riyadh time. Hands-on time was not tracked.
 
----
+### Entry 2 — November 14 · Running the finished program in VS Code
 
-### Entry 2 — November 14, 2026 · 15:21 Riyadh · Ready queue
+I ran the simulation in VS Code and shared the output. The copied text showed question marks where I expected checkmarks, so I asked whether the run had passed. All four values matched: 30 switches, 16 completed processes, 92,232 ms of service and zero empty polls. The console printed “All shared values are consistent” and returned to the PowerShell prompt.
 
-**Assisted implementation record:** The coding assistant placed one ReentrantLock around access to the queue and its thread-to-process map. Holding it across both reading and removing the head prevents two CPUs from claiming the same thread. All five tests completed 16 processes, but the switch count ranged from 26 to 28 instead of 30.
+**Time:** Duration was not recorded.
 
----
+### Entry 3 — November 14 · Starting a fresh walkthrough
 
-### Entry 3 — November 14, 2026 · 15:22 Riyadh · Statistics counters
+After the deadline extension, the assistant started a separate walkthrough branch at the student-ID commit and ran the starter again. The watchdog fired after 28 seconds. This run completed 13 of 16 processes and recorded 652 empty polls, compared with 648 in the first run. The new output was saved as the baseline for the walkthrough.
 
-**Assisted implementation record:** The coding assistant protected each counter and its getter with the same lock. Separate locks allow independent counters to update concurrently. In five tests, all three totals matched: 30 switches, 16 completions, and 92,232 ms. The remaining failure was 40–63 empty polls per run.
-
----
-
-### Entry 4 — November 14, 2026 · 15:23 Riyadh · Semaphore and shutdown
-
-**Assisted implementation record:** The coding assistant replaced the polling loop with a semaphore initialized to zero. Adding a process supplies one permit; finishing all processes wakes waiting workers so they can exit. Five consecutive runs finished with zero empty polls, all four checks passing, and no watchdog.
-
-**Timing:** Recorded milestone time. Individual effort duration was not measured.
-
----
-
----
-
-### Entry 5 — November 14, 2026 · Final check in VS Code
-
-**What I did:** I ran `SchedulerSimulationSync` in VS Code and shared the console output for verification.
-
-**Details:** My student ID generated 16 processes, four CPUs, and a 4,000 ms quantum. The run completed all 16 processes in 30 quanta, with 92,232 ms of total service time and zero empty polls.
-
-**Display issue and verification:** The copied output showed question marks beside the results. Each observed value matched its expected value, the program printed “All shared values are consistent,” and the PowerShell prompt returned.
-
----
-
-### Entry 6 - [Optional - Date and Time]
-**What I did**:
-
-**Details**:
-
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
-
----
+**Evidence:** [Walkthrough baseline commit](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/841c7d20414fea980f0dae2b1cdbab2c365e21a6). The 28 seconds measures the run only; session duration was not recorded.
 
 ## Development Log Summary
 
