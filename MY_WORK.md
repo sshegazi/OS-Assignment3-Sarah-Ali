@@ -32,11 +32,11 @@
 
 | Field | Your Answer |
 |-------|-------------|
-| **Full Name** | [Write your full name here] |
-| **Student ID** | [Write your student ID here] |
-| **University Email** | [yourid]@std.psau.edu.sa |
-| **GitHub Username** | [your-github-username] |
-| **Repository Link** | [Paste your repository link here] |
+| **Full Name** | Sarah Mohammed Osman Ali |
+| **Student ID** | 445052828 |
+| **University Email** | 445052828@STD.PSAU.EDU.SA |
+| **GitHub Username** | sshegazi |
+| **Repository Link** | https://github.com/sshegazi/OS-Assignment3-Sarah-Ali |
  
 ---
 
@@ -298,20 +298,30 @@
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+The starter recorded 25 of 30 switches, 13 of 16 completions, and 76,725 of 92,232 ms of service. All four CPUs picked P1, and the watchdog fired after 28 seconds. A separate lost-update interleaving is possible when the process threads on CPU-1 and CPU-2 both read the same switch count before either writes it back. An operating system can switch threads between the read and write even without the artificial pause, so the result depends on timing.
 
 Verification block of the **original starter**:
 ```
-[Paste the verification block (or the exception/watchdog message) of the starter here]
+═══ VERIFICATION (expected values are computed from YOUR seed) ═══
+  Context switches (quanta executed)     expected 30       observed 25       ✘ MISMATCH
+  Completed processes                    expected 16       observed 13       ✘ MISMATCH
+  Total service time (ms)                expected 92232    observed 76725    ✘ MISMATCH
+  Busy-waiting polls (must be 0)         expected 0        observed 648      ✘ MISMATCH
+  ✘ At least one check failed (see the ✘ lines above): a race condition or busy waiting is still present.
 ```
 
 Verification block of **my final version**:
 ```
-[Paste the verification block of your final version here (all lines ✔)]
+═══ VERIFICATION (expected values are computed from YOUR seed) ═══
+  Context switches (quanta executed)     expected 30       observed 30       ✔
+  Completed processes                    expected 16       observed 16       ✔
+  Total service time (ms)                expected 92232    observed 92232    ✔
+  Busy-waiting polls (must be 0)         expected 0        observed 0        ✔
+  ✔ All shared values are consistent.
 ```
 
 **Explanation of the timeline:**
-[Explain the lost update step by step.]
+Example interleaving: CPU-1 reads 12 → CPU-2 reads 12 during RaceWindow.pause() → both write 13 → two quanta add only one to the count.
 
 ## Question 2: Critical Sections and Lock Granularity
 
@@ -321,12 +331,14 @@ Verification block of **my final version**:
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+One queue lock covers the list and map together because a queued thread needs a matching process. Each independent counter has its own lock, shared by its getter and updater, so updates to different counters can overlap at the cost of managing three locks. The queue uses a separate lock because its operations do not change the statistics. Mutual exclusion keeps other threads out of the same critical section, and releasing each lock in finally lets a waiting thread make progress. The default ReentrantLock is nonfair, so there is no fixed bound on how many other threads can enter first.
 
 | Critical section (variable / method) | Lock used | Why it needs protection |
 |---|---|---|
-| [e.g., `ReadyQueue.poll()`] | [lock name] | [reason] |
-| [...] | [...] | [...] |
+| add, poll, processOf, snapshot | queueLock | Protect list/map access and the full head-read/remove operation. |
+| incrementContextSwitch, getContextSwitchCount | switchLock | Serialize reads and updates of the quantum count. |
+| incrementCompletedProcess, getCompletedProcessCount | completionLock | Keep the completion test consistent with updates. |
+| addServiceTime, getTotalServiceTime | serviceLock | Preserve each quantum’s contribution. |
 
 ## Question 3: Busy Waiting vs Semaphore
 
@@ -336,7 +348,7 @@ Verification block of **my final version**:
 
 **Your Answer:** *(3-5 sentences)*
 
-[Write your answer here.]
+The starter woke every 20 ms to recheck an empty queue and recorded 648 empty polls. The semaphore starts at zero because the queue starts empty, and its 16 permits after the initial additions represent 16 available processes. A CPU acquires one permit before polling, so an empty queue blocks the CPU until work or a shutdown signal arrives. When all 16 processes finish, releasing four permits lets blocked CPUs wake, check completion, and exit even though no more work will arrive.
 
 ## Question 4: Classical Problems and Deadlock
 
@@ -347,13 +359,13 @@ Verification block of **my final version**:
 **Your Answer:** *(3-5 sentences)*
 
 **Classical problem and roles**:
-[Name the problem; who is the producer, who is the consumer?]
+Producer-consumer; main and re-enqueuing CPUs produce, CPUs consume.
 
 **Semaphores for a bounded queue (name and initial value)**:
-[Name the three semaphores and their initial values.]
+empty = K, full = 0, mutex = 1.
 
 **Deadlock scenario and prevention**:
-[Describe the scenario and the necessary condition you would break.]
+A producer waits for space while holding the mutex required by the consumer. Acquiring the resource permit first prevents the circular wait.
 
 ## Summary
 
