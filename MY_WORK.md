@@ -152,16 +152,11 @@
 
 ---
 
-### Entry 3 - [Date and Time]
-**What I did**:
+### Entry 3 — November 14, 2026 · 15:21 Riyadh · Ready queue
 
-**Details**:
+**Assisted implementation record:** The coding assistant placed one ReentrantLock around access to the queue and its thread-to-process map. Holding it across both reading and removing the head prevents two CPUs from claiming the same thread. All five tests completed 16 processes, but the switch count ranged from 26 to 28 instead of 30.
 
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
+**Timing:** Recorded milestone time. Individual effort duration was not measured.
 
 ---
 
