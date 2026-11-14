@@ -168,16 +168,11 @@
 
 ---
 
-### Entry 5 - [Date and Time]
-**What I did**:
+### Entry 5 — November 14, 2026 · 15:23 Riyadh · Semaphore and shutdown
 
-**Details**:
+**Assisted implementation record:** The coding assistant replaced the polling loop with a semaphore initialized to zero. Adding a process supplies one permit; finishing all processes wakes waiting workers so they can exit. Five consecutive runs finished with zero empty polls, all four checks passing, and no watchdog.
 
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
+**Timing:** Recorded milestone time. Individual effort duration was not measured.
 
 ---
 
