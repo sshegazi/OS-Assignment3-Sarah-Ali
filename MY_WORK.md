@@ -132,16 +132,8 @@
 
 ## Your Development Log
 
-### Entry 1 - [Date and Time]
-**What I did**:
-
-**Details**:
-
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
+### Entry 1 — November 14, 2026 · Second assisted walkthrough baseline
+This branch revisits the three features already implemented on main. The coding assistant compiled the original starter with Sarah’s student ID (445052828) and ran it again. The watchdog stopped it at 28 seconds. Context switches were 25/30, completions 13/16, service time 76,725/92,232 ms, and empty polls 652/0 (observed/expected). This establishes a fresh baseline before the queue-lock walkthrough.
 
 ---
 
