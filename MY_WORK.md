@@ -144,16 +144,11 @@
 
 ---
 
-### Entry 2 - [Date and Time]
-**What I did**:
+### Entry 2 — November 14, 2026 · 15:19–15:21 Riyadh · Personalization and baseline
 
-**Details**:
+**Assisted implementation record:** After Sarah provided her ID, the coding assistant set the simulation seed and saved the starter output before changing synchronization. Four CPUs picked P1, and the watchdog fired after 28 seconds. Only 13 of 16 processes finished. This supplied the baseline for checking each fix.
 
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
+**Timing:** Recorded milestone time. Individual effort duration was not measured.
 
 ---
 
