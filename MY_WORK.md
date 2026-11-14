@@ -160,16 +160,11 @@
 
 ---
 
-### Entry 4 - [Date and Time]
-**What I did**:
+### Entry 4 — November 14, 2026 · 15:22 Riyadh · Statistics counters
 
-**Details**:
+**Assisted implementation record:** The coding assistant protected each counter and its getter with the same lock. Separate locks allow independent counters to update concurrently. In five tests, all three totals matched: 30 switches, 16 completions, and 92,232 ms. The remaining failure was 40–63 empty polls per run.
 
-**Challenges**:
-
-**Solution**:
-
-**Time spent**:
+**Timing:** Recorded milestone time. Individual effort duration was not measured.
 
 ---
 
