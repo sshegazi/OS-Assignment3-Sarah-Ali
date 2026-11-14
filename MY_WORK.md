@@ -132,16 +132,15 @@
 
 ## Your Development Log
 
-### Entry 1 - [Date and Time]
-**What I did**:
+### Entry 1 — November 14, 2026 · VS Code execution
 
-**Details**:
+**What I did:** I ran `SchedulerSimulationSync` in VS Code and shared the console output for verification.
 
-**Challenges**:
+**Details:** My student ID generated 16 processes, four CPUs, and a 4,000 ms quantum. The run completed all 16 processes in 30 quanta, with 92,232 ms of total service time and zero empty polls.
 
-**Solution**:
+**Display issue and verification:** The copied output showed question marks beside the results. Each observed value matched its expected value, the program printed “All shared values are consistent,” and the PowerShell prompt returned.
 
-**Time spent**:
+**Time spent:** Duration was not recorded.
 
 ---
 
