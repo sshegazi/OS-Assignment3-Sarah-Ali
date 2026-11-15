@@ -165,16 +165,17 @@ This branch revisits the three features already implemented on main. The coding 
 
 ---
 
-### Entry 4 - [Date and Time]
-**What I did**:
+### Entry 4 — November 15, 2026 · 12:00 PM Riyadh · Second assisted walkthrough, Feature 3
 
-**Details**:
+**What I did**: The coding assistant reapplied the November 14 semaphore and shutdown implementation, compiled it and ran five consecutive simulations before committing.
 
-**Challenges**:
+**Details**: The semaphore starts at zero. Each successful enqueue releases one permit; a worker acquires one outside the queue lock before taking work. An interrupted worker remembers the interrupt and finishes waiting for its active quantum before it can re-enqueue that process.
 
-**Solution**:
+**Challenges**: The previous stage still recorded 47 empty polls in every run. Blocking on a permit avoids those polls, but once all processes finish there will be no new work to wake an idle CPU.
 
-**Time spent**:
+**Solution**: The worker that observes completion releases enough permits to wake the other CPUs. A waking worker checks the completion count before polling. Each run recorded 30 switches, 16 completions, 92,232 ms of service and zero empty polls, then exited normally. The five run times were 4.99, 5.03, 4.99, 4.97 and 4.98 seconds. The protected code matched the personalized starter.
+
+**Time spent**: 62 seconds elapsed from the first repository check through the feature commit and preparation of this entry.
 
 ---
 
