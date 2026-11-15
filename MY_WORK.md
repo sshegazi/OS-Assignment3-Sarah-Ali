@@ -151,16 +151,17 @@ This branch revisits the three features already implemented on main. The coding 
 
 ---
 
-### Entry 3 - [Date and Time]
-**What I did**:
+### Entry 3 — November 15, 2026 · 10:57 AM Riyadh · Second assisted walkthrough, Feature 2
 
-**Details**:
+**What I did**: The coding assistant reapplied the November 14 statistics locks to the walkthrough branch, compiled the program and ran five fresh simulations before committing.
 
-**Challenges**:
+**Details**: Each update method and its getter share a lock. The counters are independent: recording service time can proceed while another worker increments the context-switch count. This uses three locks but avoids forcing unrelated updates to wait.
 
-**Solution**:
+**Challenges**: After the queue fix, every process finished, yet the switch count reached only 27 or 28. Two threads could still read the same count and overwrite each other’s updates during the simulated pause.
 
-**Time spent**:
+**Solution**: Hold the corresponding lock through each read, pause and write, and unlock in `finally`. All five runs recorded 30 switches, 16 completions and 92,232 ms, and exited without an exception or watchdog. Each run still recorded 47 empty polls against the expected zero. This remaining failure belongs to the semaphore stage.
+
+**Time spent**: 41 seconds elapsed from the repository check through the feature commit and preparation of this entry.
 
 ---
 
