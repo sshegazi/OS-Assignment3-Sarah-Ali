@@ -137,16 +137,17 @@ This branch revisits the three features already implemented on main. The coding 
 
 ---
 
-### Entry 2 - [Date and Time]
-**What I did**:
+### Entry 2 — November 15, 2026 · 10:04 a.m. Riyadh · Second assisted walkthrough, Feature 1
 
-**Details**:
+**What I did**: The coding assistant reapplied the November 14 ready-queue change on this walkthrough branch, compiled the program and ran five fresh simulations before committing.
 
-**Challenges**:
+**Details**: One lock covers the list and map in `add()`, `poll()`, `processOf()` and `snapshot()`. Each run finished all 16 distinct processes without an exception or watchdog timeout.
 
-**Solution**:
+**Challenges**: In the baseline, two CPUs could read the same head during the pause in `poll()`. Locking only the removal would still leave that gap.
 
-**Time spent**:
+**Solution**: Hold the lock from the empty check through reading and removing the head, and unlock in `finally`. The switch counts in run order were 28, 27, 27, 28 and 28 (expected 30); service totals were 84,232, 88,232, 92,232, 88,232 and 84,232 ms (expected 92,232). Empty polls were 54, 48, 54, 47 and 54. Statistics and polling are the next two stages.
+
+**Time spent**: 51 seconds elapsed from the first repository check through the feature commit and preparation of this entry.
 
 ---
 
