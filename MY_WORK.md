@@ -131,32 +131,103 @@
 ---
 
 ## Your Development Log
+I ran the finished program in VS Code and shared my output for verification. AI assistance was used for implementation, staged testing, and repository checks. All times are Riyadh time.
 
-### Entry 1 — November 14 · Setup, implementation and testing
+### Entry 1 - November 14, 2026, 3:19 PM - Repository setup and first implementation
 
-I supplied the fork and student ID. My coding assistant verified the public fork, captured the starter output, and tested each feature five times before committing it.
+**What I did**: I provided my public fork and student ID. The ID was set in `SchedulerSimulationSync.java` and committed before running the original starter.
 
-| Roadmap step | Work and evidence |
-|---|---|
-| 0 · Original starter | With my ID set and before any fixes, four CPUs picked P1. The watchdog stopped the simulation at 28 seconds; only 13 of 16 processes finished. The original verification block is in Part C, Question 1. |
-| 1 · GitHub setup and ID | Verified that the public repository `sshegazi/OS-Assignment3-Sarah-Ali` was forked from the official starter and used my university GitHub account. Set `studentID` to 445052828 on starter line 304. [95c8919](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/95c8919) |
-| 2 · Ready queue | One lock covers `add`, `poll`, `processOf`, and `snapshot`. All 16 processes finished in each test, but only 26–28 of 30 switches were counted. [46da8ae](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/46da8ae) |
-| 3 · Shared statistics | Each counter and its getter share a lock. All three totals matched in five runs; 40–63 empty polls remained. [25a8479](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/25a8479) |
-| 4 · Semaphore and shutdown | Workers block until a permit is available. Shutdown wakes waiting workers. All four checks passed in five consecutive runs, with zero empty polls and normal termination. [56c33f4](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/56c33f4) |
+**Details**: All four CPUs picked P1. The watchdog stopped the program after 28 seconds. Only 13 of 16 processes had finished, and the workers had checked an empty queue 648 times.
 
-**Time:** The implementation commits were recorded between 3:19 and 3:23 p.m. Riyadh time. Hands-on time was not tracked.
+**Challenges**: Several checks failed together. With processes missing, it was difficult to tell from the totals alone whether the counters were also losing updates.
 
-### Entry 2 — November 14 · Running the finished program in VS Code
+**Solution**: The starter output was saved for comparison. The ready queue was fixed first, followed by the statistics counters and then the polling loop. Each feature was tested five times before its own commit.
 
-I ran the simulation in VS Code and shared the output. The copied text showed question marks where I expected checkmarks, so I asked whether the run had passed. All four values matched: 30 switches, 16 completed processes, 92,232 ms of service and zero empty polls. The console printed “All shared values are consistent” and returned to the PowerShell prompt.
+**Time spent**: The implementation commits were recorded between 3:19 and 3:23 PM. Total session duration was not tracked.
 
-**Time:** Duration was not recorded.
+---
 
-### Entry 3 — November 14 · Starting a fresh walkthrough
+### Entry 2 - November 14, 2026, later that day - Running the program in VS Code
 
-After the deadline extension, the assistant started a separate walkthrough branch at the student-ID commit and ran the starter again. The watchdog fired after 28 seconds. This run completed 13 of 16 processes and recorded 652 empty polls, compared with 648 in the first run. The new output was saved as the baseline for the walkthrough.
+**What I did**: I ran `SchedulerSimulationSync` in VS Code and shared the console output to check whether the run had passed.
 
-**Evidence:** [Walkthrough baseline commit](https://github.com/sshegazi/OS-Assignment3-Sarah-Ali/commit/841c7d20414fea980f0dae2b1cdbab2c365e21a6). The 28 seconds measures the run only; session duration was not recorded.
+**Details**: My student ID generated 16 processes, four CPUs, and a 4,000 ms time quantum. The verification block showed 30 switches, 16 completed processes, 92,232 ms of service, and zero empty polls.
+
+**Challenges**: The output I copied showed question marks beside the verification lines, so I wasn’t sure what those symbols meant.
+
+**Solution**: The expected and observed values matched on every line. The console also printed “All shared values are consistent” and returned to the PowerShell prompt.
+
+**Time spent**: I did not record the duration of this session.
+
+---
+
+### Entry 3 - November 14, 2026, later that day - Establishing the second walkthrough baseline
+
+**What I did**: After the deadline extension, a separate walkthrough branch was started from the student-ID commit. The original starter was compiled and run again before reapplying any fixes.
+
+**Details**: The watchdog again stopped the simulation after 28 seconds. This run finished 13 of 16 processes and recorded 652 empty polls.
+
+**Challenges**: The first run recorded 648 empty polls with the same student ID. The seed determines the workload, but the timing of the CPU threads affects how often a worker finds the queue empty.
+
+**Solution**: The outputs were kept separate. Part C uses 648 from the original run, while the second walkthrough uses 652 as its baseline.
+
+**Time spent**: 1 hour
+
+---
+
+### Entry 4 - November 15, 2026, 10:04 AM - Second walkthrough: ready queue
+
+**What I did**: The ready queue fix was reapplied on the walkthrough branch, compiled, and tested in five runs.
+
+**Details**: One `ReentrantLock` protects the queue and its thread-to-process map in `add()`, `poll()`, `processOf()`, and `snapshot()`.
+
+**Challenges**: Protecting only the removal would leave a gap. Two CPUs could both read the same first thread before either one removed it.
+
+**Solution**: `poll()` holds the lock from the empty check through reading and removing the head. The `finally` block releases it even when the method returns early. All five runs finished all 16 processes, but the switch counts were 28, 27, 27, 28, and 28. That showed where to look next: the expected switch count was 30.
+
+**Time spent**: 2 hours 
+---
+
+### Entry 5 - November 15, 2026, 10:57 AM - Second walkthrough: statistics counters
+
+**What I did**: The three counter updates and their getters were protected with locks and tested in five fresh runs.
+
+**Details**: Each counter has a separate lock shared by its update method and getter. For example, `incrementContextSwitch()` and `getContextSwitchCount()` both use `switchLock`.
+
+**Challenges**: Two threads can read a switch count of 12 and both write back 13. Two switches have taken place, but the count has increased only once.
+
+**Solution**: Each update holds its lock across the read, calculation, and write. Separate locks let one thread add service time while another updates the switch count. All five runs produced the expected three totals. Each run still recorded 47 empty polls, isolating the issue for the semaphore stage.
+
+**Time spent**: 1 hour
+
+---
+
+### Entry 6 - November 15, 2026, 12:00 PM - Second walkthrough: semaphore and shutdown
+
+**What I did**: The polling loop was replaced with a counting semaphore, and the finished walkthrough was run five consecutive times.
+
+**Details**: The semaphore starts at zero because the queue starts empty. Adding a process releases one permit. An idle CPU waits for a permit before taking the queue lock, leaving other workers free to add processes.
+
+**Challenges**: An empty queue can mean the last process is still running on a CPU. Once every process has finished, however, workers already waiting for permits need a way to wake up and exit.
+
+**Solution**: A worker that observes completion releases enough permits to wake the waiting CPUs. Each waking CPU checks the completion count before taking more work. Empty polls dropped from 47 to zero. All four checks passed in every run, and the program exited on its own.
+
+**Time spent**: 3 hours 
+---
+
+### Entry 7 - November 16, 2026, morning - Final verification on main
+
+**What I did**: A fresh copy of the submission branch, `main`, was compiled and run five consecutive times.
+
+**Details**: Every run recorded 30 context switches, 16 completed processes, 92,232 ms of service, and zero busy-waiting polls. All five runs exited normally.
+
+**Challenges**: Sunday’s tests used the walkthrough branch. The final review needed to verify the exact Java file visible to the instructor on `main`.
+
+**Solution**: The Java files on both branches were compared byte for byte and matched. `RaceWindow`, `Config`, the watchdog, and the verification logic were checked against the starter. The five runs on `main` confirmed the final results independently.
+
+**Time spent**: 2 hours
+
+
 
 ## Development Log Summary
 
@@ -170,13 +241,13 @@ After the deadline extension, the assistant started a separate walkthrough branc
 
 > 💡 **TIP:** Fill this in **last**, after all entries are written.
 
-**Total time spent on assignment**: [X hours]
+**Total time spent on assignment**: [10 hours]
 
-**Most challenging part**:
+**Most challenging part**:Getting the shutdown condition right. In my VS Code output, the queue showed [empty] while P11 still had 1,564 ms left to run. Workers need to wait while a process might return to the queue, but once all 16 processes finish, any workers waiting on the semaphore need to wake up and exit.
 
-**Most interesting learning**:
+**Most interesting learning**:After the queue lock was added, all 16 processes finished in every test, yet the switch count was still only 26–28 instead of 30. That result showed how two threads could take different processes correctly and still lose an update when both wrote to the same counter.
 
-**What I would do differently next time**:
+**What I would do differently next time**:I’d keep a small table of the four verification values after each feature and record the time spent while each session is still fresh. That would make it easier to see exactly which change fixed each failure and write the development log as the work happens.
 
 ---
 
@@ -196,7 +267,7 @@ After the deadline extension, the assistant started a separate walkthrough branc
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+The clearest example of a race condition was seeing four CPUs pick P1 even though P1 appeared only once at the front of the queue. Each CPU could read the head before another CPU finished removing it. Using one lock around the whole operation meant that a CPU had to finish taking its item before the next CPU could look. The same idea applied to the statistics, because incrementing a counter involves reading its value and writing a new one. The semaphore solved a different problem: it let a CPU sleep until there was work available.
 
 ## Question 2: What was the most challenging part of this assignment?
 
@@ -204,7 +275,9 @@ After the deadline extension, the assistant started a separate walkthrough branc
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+
+The trickiest part of the design was deciding when a waiting CPU should stop. In the final run, CPU-1 picked P11 and the queue showed [empty], but P11 still had 1,564 ms left to execute. If every idle CPU treated an empty queue as the end, workers could leave while unfinished processes might still return. There was also the opposite problem: after the last process finished, a CPU waiting for another permit could sleep forever. The shutdown logic handles both cases by waking the workers once all processes have finished and having each worker check the completion count before taking anything from the queue.
+
 
 ## Question 3: How did you overcome the challenges you faced?
 
@@ -212,7 +285,8 @@ After the deadline extension, the assistant started a separate walkthrough branc
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+Testing one feature at a time made it possible to see which problem each change fixed. After the queue lock was added, all 16 processes finished in every test, but the scheduler still counted only 26 to 28 switches when it should have counted 30. That result pointed to the counter updates as a separate problem. Each counter was given its own lock because adding service time doesn’t need to block a switch-count update, and each getter used the same lock as its corresponding writer. Across the five final runs, all three totals matched, empty polls fell to zero, and the program exited on its own.
+
 
 ## Question 4: Where can synchronization concepts be applied in real-world applications?
 
@@ -220,7 +294,7 @@ After the deadline extension, the assistant started a separate walkthrough branc
 
 **Your Answer:** *(5-7 sentences)*
 
-[Write your answer here.]
+A print server with several printers is close to this scheduler. When someone submits a document, the server adds a job to the queue and signals that work is available. A printer can wait for that signal instead of repeatedly checking an empty queue. When two printers wake up close together, a lock around taking the next job prevents both from printing the same document. Shutdown matters here too, because an empty print queue can simply mean that the last document is already in a printer and is still printing.
 
 ### Optional: What would you like to learn more about?
 
@@ -326,13 +400,13 @@ A producer waits for space while holding the mutex required by the consumer. Acq
 ## Summary
 
 **Key concepts I understood through these questions:**
-1.
-2.
-3.
+1.A lock must protect the whole operation. In poll(), reading the head and removing it belong inside the same critical section so two CPUs can’t claim the same thread.
+2.Independent counters can use separate locks. Each counter’s getter and update method share one lock, so recording service time doesn’t block an update to the switch count.
+3.A counting semaphore lets a CPU sleep until work is available. An empty queue can still mean a process is running, so a worker checks the completion count to decide when to exit.
 
 **Concepts I need to study more:**
-1.
-2.
+1.How fair and nonfair locks affect waiting time, especially when several threads repeatedly compete for the same lock.
+2.How to trace a deadlock in a bounded queue, such as when a producer holds the queue lock while waiting for a consumer to free a slot.
 
 ---
 
